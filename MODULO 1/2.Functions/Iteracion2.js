@@ -5,7 +5,7 @@ const avengers = [
   "Hulk",
   "Thor",
   "IronMan",
-  "CaptainA.",
+  "Captain A.",
   "Spiderman",
   "Captain M.",
 ];
