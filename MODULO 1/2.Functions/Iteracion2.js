@@ -9,26 +9,26 @@ const avengers = [
   "Spiderman",
   "Captain M.",
 ];
-function findLongestWord(arrayAvengers) {
-  let longestWord = "";
-  for (let i = 0; i < arrayAvengers.length; i++) {
-    if (longestWord < arrayAvengers[i].length) {
-      longestWord = arrayAvengers[i];
-    }
-  }
-  return longestWord;
-}
-let x = findLongestWord(avengers);
-console.log(x);
-
 // function findLongestWord(arrayAvengers) {
 //   let longestWord = "";
 //   for (let i = 0; i < arrayAvengers.length; i++) {
-//     if (longestWord.length < arrayAvengers[i].length) {
+//     if (longestWord < arrayAvengers[i].length) {
 //       longestWord = arrayAvengers[i];
 //     }
 //   }
 //   return longestWord;
 // }
+// let x = findLongestWord(avengers);
+// console.log(x);
+
+function findLongestWord(arrayAvengers) {
+  let longestWord = "";
+  for (let i = 0; i < arrayAvengers.length; i++) {
+    if (longestWord.length < arrayAvengers[i].length) {
+      longestWord = arrayAvengers[i];
+    }
+  }
+  return longestWord;
+}
 let b = findLongestWord(avengers);
 console.log(b);
