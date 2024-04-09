@@ -1,4 +1,4 @@
 import "./style.css";
-import { initTemplate } from "./src/utils/initiateTemplate.js";
+import { initControler, initTemplate } from "./src/utils/index.js";
 initTemplate();
 initControler();

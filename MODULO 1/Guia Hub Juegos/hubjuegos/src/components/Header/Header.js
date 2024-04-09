@@ -1,3 +1,6 @@
+import { getUser } from "../../global/state/globalState";
+import { changeColorRGB } from "../../utils";
+import { initControler } from "../../utils/route";
 import "./Header.css";
 
 const template = () => `
@@ -25,7 +28,34 @@ const template = () => `
   </nav>
 `;
 
-const addListeners = () => {};
+const addListeners = () => {
+  const changeColor = document.getElementById("changeColor");
+  changeColor.addEventListener("click", (e) => {
+    /** en este caso lo que hacemos el generar un color y cambiar el stylo del background del body */
+    const color = changeColorRGB();
+    document.body.style.background = color;
+  });
+
+  const buttonDashboard = document.getElementById("buttonDashboard");
+  buttonDashboard.addEventListener("click", (e) => {
+    // llamamos al initController con el dashboard para que pinte la pagina del dashboard
+    initControler("Dashboard");
+  });
+
+  const buttonLogout = document.getElementById("buttonLogout");
+  buttonLogout.addEventListener("click", (e) => {
+    const userState = getUser().name;
+    const currentUser = localStorage.getItem(userState);
+    const parseCurrentUser = JSON.parse(currentUser);
+    const updateUser = { ...parseCurrentUser, token: false };
+    const stringUpdateUser = JSON.stringify(updateUser);
+    localStorage.removeItem(userState);
+    sessionStorage.removeItem("currentUser");
+    localStorage.setItem(userState, stringUpdateUser);
+
+    initControler("Login");
+  });
+};
 
 export const PrintTemplateHeader = () => {
   document.querySelector("header").innerHTML = template();
