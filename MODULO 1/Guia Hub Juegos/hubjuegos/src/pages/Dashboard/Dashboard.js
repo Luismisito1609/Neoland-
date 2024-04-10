@@ -1,4 +1,4 @@
-import { initControler } from "../../utils";
+import { getInfo, initControler } from "../../utils";
 import "./Dashboard.css";
 
 const template = () => `
@@ -48,4 +48,5 @@ export const printTemplateDashboard = () => {
   document.querySelector("nav").style.display = "flex";
 
   addEventListeners();
+  getInfo();
 };

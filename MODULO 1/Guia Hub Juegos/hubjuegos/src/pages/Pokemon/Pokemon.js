@@ -1,3 +1,5 @@
+import { PrintTemplateSpinner } from "../../components/spinner/Spinner";
+import { PrintSpinner } from "../../components/spinner/SpinnerButton";
 import "./Pokemon.css";
 
 const template = () => `
@@ -23,4 +25,7 @@ const addListeners = () => {};
 
 export const PrintPokemonPage = () => {
   document.querySelector("main").innerHTML = template();
+  PrintTemplateSpinner();
+  PrintSpinner();
+  dataService();
 };
