@@ -1,7 +1,7 @@
 import { CardsPokemons } from "../components";
 
 export const Paginacion = (data, numberElement) => {
-  longitud = data.length;
+  const longitud = data.length;
   const numberDigitOfPage = longitud / numberElement;
 
   document.getElementById("paginacion").innerHTML = "";
@@ -10,7 +10,7 @@ export const Paginacion = (data, numberElement) => {
     for (let i = 0; i < numberDigitOfPage; i++) {
       const buttonNumber = document.createElement("button");
       buttonNumber.setAttribute("class", `${i + 1} buttonPaginacion`);
-      b;
+      buttonNumber.innerHTML = i + 1;
       document.getElementById("paginacion").appendChild(buttonNumber);
 
       addListeners(buttonNumber, data, numberElement, i);

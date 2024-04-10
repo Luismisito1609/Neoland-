@@ -16,19 +16,10 @@ const template = () => `
       <li>
         <figure>
           <img
-            src="https://res.cloudinary.com/dq186ej4c/image/upload/v1689761641/pngwing.com_1_iq8zfk.png"
-            alt=" go to wacka topo game"
+            src="https://res.cloudinary.com/dfmtnqzyl/image/upload/v1712765477/777-removebg-preview_c91oxc.png"
+            alt=" go to AHORCADO game"
           />
-          <h2>WACKA TOPO</h2>
-        </figure>
-      </li>
-      <li>
-        <figure>
-          <img
-            src="https://res.cloudinary.com/dq186ej4c/image/upload/v1689761735/6168776_kfna36.png"
-            alt="go to memory game"
-          />
-          <h2>MEMORY GAME</h2>
+          <h2>AHORCADO</h2>
         </figure>
       </li>
     </ul>
