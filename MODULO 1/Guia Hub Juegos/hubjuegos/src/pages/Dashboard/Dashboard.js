@@ -14,7 +14,7 @@ const template = () => `
         </figure>
       </li>
       <li>
-        <figure>
+        <figure id=navigatePagina>
           <img
             src="https://res.cloudinary.com/dfmtnqzyl/image/upload/v1712765477/777-removebg-preview_c91oxc.png"
             alt=" go to AHORCADO game"
@@ -30,6 +30,10 @@ const addEventListeners = () => {
   const navigatePokemon = document.getElementById("navigatePokemon");
   navigatePokemon.addEventListener("click", () => {
     initControler("Pokemon");
+  });
+  const navigateAhorcado = document.getElementById("navigatePagina");
+  navigateAhorcado.addEventListener("click", () => {
+    initControler("ahorcado");
   });
 };
 

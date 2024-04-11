@@ -5,3 +5,4 @@ export * from "./axios";
 export * from "./paginacion";
 export * from "./typePokemon";
 export * from "./dataPokemon";
+export * from "./ahorcado";
