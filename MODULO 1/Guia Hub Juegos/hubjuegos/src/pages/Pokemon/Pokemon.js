@@ -35,13 +35,6 @@ const dataService = async () => {
 const addListeners = () => {
   const inputPokemon = document.getElementById("inputPokemon");
   inputPokemon.addEventListener("input", (e) => {
-    /** este evento lo unico que hace es mandar el valor del input y el tipo de filtro que tiene que
-     
-hacer a la funcion que se encarga de filtrar.*
-Recordar este funcion nos sirve gracias al switch
-para el filtrado por name como para el filtrado por
-button con los tipos de pokemons
-*/
     filterPokemon(e.target.value, "name");
   });
 };

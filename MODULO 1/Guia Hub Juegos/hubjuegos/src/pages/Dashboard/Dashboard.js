@@ -7,10 +7,10 @@ const template = () => `
       <li>
         <figure id="navigatePokemon">
           <img
-            src="https://res.cloudinary.com/dq186ej4c/image/upload/v1689761508/pngwing.com_r0hr9b.png"
+            src="https://archives.bulbagarden.net/media/upload/9/95/Project_Pok%C3%A9dex_logo.png"
             alt="go to page pokemon"
           />
-          <h2>POKEMON</h2>
+          <h2>POKEDEX</h2>
         </figure>
       </li>
       <li>
