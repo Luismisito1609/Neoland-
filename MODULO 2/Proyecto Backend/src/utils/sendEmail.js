@@ -1,10 +1,11 @@
+//? ---------Metodo para enviar email----------------
 const dotenv = require("dotenv");
 dotenv.config();
 const nodemailer = require("nodemailer");
 const { setTestEmailSend } = require("../state/state.data");
 
 const sendEmail = (userEmail, name, confirmationCode) => {
-  /**^reseteo el estado a false ---> es el estado inicial */
+  //Reseteamos a su estado inicial, en este caso a false
   setTestEmailSend(false);
   const email = process.env.EMAIL;
   const password = process.env.PASSWORD;

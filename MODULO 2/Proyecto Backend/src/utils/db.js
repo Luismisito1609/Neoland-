@@ -1,24 +1,22 @@
-//!------------------------------------------------------------------------------
-//?----------------------CONEXION CON LA base de datos MONGO DB------------------
-//!------------------------------------------------------------------------------
+//?---------------------Nos conectamos con la base de datos de MONGO ----------------------
 
-// tenemos que traernos dotenv porque tenmos la url que no queremos que se comparta publicamente
+// Tenemos que traernos dotenv porque tenmos la url que no queremos que se comparta publicamente
 const dotenv = require("dotenv");
 dotenv.config();
 
 // Nos traemos la libreria mongoose que es quien va a controlar la DB: MONGO DB
 const mongoose = require("mongoose");
 
-// nos traemos la MONGO_URI del .env
+// Nos traemos la MONGO_URI del .env
 const MONGO_URI = process.env.MONGO_URI;
 
-/// hacemos la funcion que se exporta y luego importa en el index que va conectar con Mongo
+/// Conectamos con MONGO al crear la funcon que se exporta y que luego importamos en el index
 
 const connect = async () => {
   try {
     const db = await mongoose.connect(MONGO_URI);
 
-    // AHORA NOS VAMOS A TRAER EL HOST  y el NAME  de la DB --
+    // Nos traemos el host y el name, de la data base de MONGO
 
     const { name, host } = db.connection;
 

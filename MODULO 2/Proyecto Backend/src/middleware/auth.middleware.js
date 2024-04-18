@@ -13,7 +13,7 @@ const isAuth = async (req, res, next) => {
   try {
     const decoded = verifyToken(token, process.env.JWT_SECRET);
 
-    /// solo se crea req.user cuando es un endpoint authenticado ---> tiene como middleware el auth
+    ///Creamos el rec.user cumpliendo con la condicion de que el  endpoint haya sido autenticado (usamos el isAuth en el middleware)
     req.user = await User.findById(decoded.id);
     next();
   } catch (error) {

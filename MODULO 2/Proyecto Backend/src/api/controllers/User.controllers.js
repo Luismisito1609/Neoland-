@@ -1,6 +1,4 @@
-//! -----------------------------------------------------------------------
 //? ------------------------------librerias--------------------------------
-//! -----------------------------------------------------------------------
 const nodemailer = require("nodemailer");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
@@ -8,14 +6,9 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-//! -----------------------------------------------------------------------
 //? ------------------------------modelos----------------------------------
-//! -----------------------------------------------------------------------
 const User = require("../models/User.model");
-
-//! -----------------------------------------------------------------------
 //? ------------------------utils - middlewares - states ------------------
-//! -----------------------------------------------------------------------
 const { deleteImgCloudinary } = require("../../middleware/files.middleware");
 const randomCode = require("../../utils/randomCode");
 const sendEmail = require("../../utils/sendEmail");
@@ -30,11 +23,9 @@ const randomPassword = require("../../utils/randomPassword");
 //------------------->CRUD es el acrónimo de "Crear, Leer, Actualizar y Borrar"
 /**+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  */
-//! -----------------------------------------------------------------------------
-//? ----------------------------REGISTER LARGO EN CODIGO ------------------------
-//! -----------------------------------------------------------------------------
+
+//? ----------------------------REGISTER LARGO EN CODIGO -----------------------------
 
 const registerLargo = async (req, res, next) => {
   // capturamos la imagen nueva subida a cloudinary
@@ -45,7 +36,7 @@ const registerLargo = async (req, res, next) => {
 
     const { email, name } = req.body; // lo que enviamos por la parte del body de la request
 
-    // vamos a buscsar al usuario
+    // vamos a buscar al usuario
     const userExist = await User.findOne(
       { email: req.body.email },
       { name: req.body.name }
@@ -112,9 +103,8 @@ const registerLargo = async (req, res, next) => {
     return next(error);
   }
 };
-//! -----------------------------------------------------------------------------
+
 //? ----------------------------REGISTER CORTO EN CODIGO ------------------------
-//! -----------------------------------------------------------------------------
 
 const registerUtil = async (req, res, next) => {
   let catchImg = req.file?.path;
@@ -413,9 +403,7 @@ const checkNewUser = async (req, res, next) => {
   }
 };
 
-//! -----------------------------------------------------------------------------
 //? --------------------------------LOGIN ---------------------------------------
-//! -----------------------------------------------------------------------------
 
 const login = async (req, res, next) => {
   /**
@@ -457,9 +445,7 @@ const login = async (req, res, next) => {
   }
 };
 
-//! -----------------------------------------------------------------------------
 //? --------------------------------AUTOLOGIN ---------------------------------------
-//! -----------------------------------------------------------------------------
 
 const autoLogin = async (req, res, next) => {
   /** ES IGUAL QUE EL LOGIN SOLO QUE AHORA COMPARO DOS CONTRASEÑAS ENCRYPTADA
@@ -488,13 +474,9 @@ const autoLogin = async (req, res, next) => {
   }
 };
 
-//! -----------------------------------------------------------------------------
 //? -----------------------CONTRASEÑAS Y SUS CAMBIOS-----------------------------
-//! -----------------------------------------------------------------------------
 
-//? -----------------------------------------------------------------------------
 //! ------------------CAMBIO DE CONTRASEÑA CUANDO NO ESTAS LOGADO---------------
-//? -----------------------------------------------------------------------------
 
 const changePassword = async (req, res, next) => {
   /**
@@ -576,7 +558,7 @@ const sendPassword = async (req, res, next) => {
            */
           await User.findByIdAndUpdate(id, { password: newPasswordBcrypt });
 
-          //!------------------ test --------------------------------------------
+          //!---------------------------- test ----------------------------------
           // vuelvo a buscar el user pero ya actualizado
           const userUpdatePassword = await User.findById(id);
 
@@ -608,14 +590,7 @@ const sendPassword = async (req, res, next) => {
   }
 };
 
-//? -----------------------------------------------------------------------------
-//! --!!!!!!!!-----------CONTROLADORES QUE LLEVAN TOKEN NECESARIO--------!!!!!!!!
-//? -----------------------------------------------------------------------------
-
-//? -----------------------------------------------------------------------------
-//! ------------------CAMBIO DE CONTRASEÑA CUANDO NO ESTAS LOGADO---------------
-//? -----------------------------------------------------------------------------
-
+//? -----------------CAMBIO DE CONTRASEÑA CUANDO NO ESTAS LOGADO-----------------
 const modifyPassword = async (req, res, next) => {
   /** Pasos:
    * 1) por el body recibo la contraseña nueva y antigua
@@ -684,6 +659,199 @@ const modifyPassword = async (req, res, next) => {
   }
 };
 
+//? ---------------------------------UPDATE--------------------------------------
+
+const update = async (req, res, next) => {
+  // capturamos la imagen nueva subida a cloudinary
+  let catchImg = req.file?.path;
+
+  try {
+    // actualizamos los elementos unique del modelo
+    await User.syncIndexes();
+
+    // instanciamos un nuevo objeto del modelo de user con el req.body
+    const patchUser = new User(req.body);
+
+    // si tenemos imagen metemos a la instancia del modelo esta imagen nuevo que es lo que capturamos en catchImg
+    req.file && (patchUser.image = catchImg);
+
+    /** vamos a salvaguardar info que no quiero que el usuario pueda cambiarme */
+    // AUNQUE ME PIDA CAMBIAR ESTAS CLAVES NO SE LO VOY A CAMBIAR
+    patchUser._id = req.user._id;
+    patchUser.password = req.user.password;
+    patchUser.rol = req.user.rol;
+    patchUser.confirmationCode = req.user.confirmationCode;
+    patchUser.email = req.user.email;
+    patchUser.check = req.user.check;
+    patchUser.gender = req.user.gender;
+
+    try {
+      /** hacemos una actualizacion NO HACER CON EL SAVE
+       * le metemos en el primer valor el id de el objeto a actualizar
+       * y en el segundo valor le metemos la info que queremos actualizar
+       */
+      await User.findByIdAndUpdate(req.user._id, patchUser);
+
+      // si nos ha metido una imagen nueva y ya la hemos actualizado pues tenemos que borrar la antigua
+      // la antigua imagen la tenemos guardada con el usuario autenticado --> req.user
+      if (req.file) deleteImgCloudinary(req.user.image);
+
+      // ++++++++++++++++++++++ TEST RUNTIME+++++++++++++++++++++++++++++++++++++++
+      /** siempre lo pprimero cuando testeamos es el elemento actualizado para comparar la info que viene
+       * del req.body
+       */
+      const updateUser = await User.findById(req.user._id);
+
+      /** sacamos las claves del objeto del req.body para saber que info nos han pedido actualizar */
+      const updateKeys = Object.keys(req.body); // ["name"]
+
+      // creamos un array donde guardamos los test
+      const testUpdate = [];
+
+      // recorremos el array de la info que con el req.body nos dijeron de actualizar
+      /** recordar este array lo sacamos con el Object.keys */
+
+      // updateKeys ES UN ARRAY CON LOS NOMBRES DE LAS CLAVES = ["name", "email", "rol"]
+
+      ///----------------> para todo lo diferente de la imagen ----------------------------------
+      updateKeys.forEach((item) => {
+        /** vamos a comprobar que la info actualizada sea igual que lo que me mando por el body... */
+        if (updateUser[item] === req.body[item]) {
+          /** aparte vamos a comprobar que esta info sea diferente a lo que ya teniamos en mongo subido antes */
+          if (updateUser[item] != req.user[item]) {
+            // si es diferente a lo que ya teniamos lanzamos el nombre de la clave y su valor como true en un objeto
+            // este objeto see pusea en el array que creamos arriba que guarda todos los testing en el runtime
+            testUpdate.push({
+              [item]: true,
+            });
+          } else {
+            // si son igual lo que pusearemos sera el mismo objeto que arrriba pro diciendo que la info es igual
+            testUpdate.push({
+              [item]: "sameOldInfo",
+            });
+          }
+        } else {
+          testUpdate.push({
+            [item]: false,
+          });
+        }
+      });
+
+      /// ---------------------- para la imagen ---------------------------------
+      if (req.file) {
+        /** si la imagen del user actualizado es estrictamente igual a la imagen nueva que la
+         * guardamos en el catchImg, mandamos un objeto con la clave image y su valor en true
+         * en caso contrario mandamos esta clave con su valor en false
+         */
+        updateUser.image === catchImg
+          ? testUpdate.push({
+              image: true,
+            })
+          : testUpdate.push({
+              image: false,
+            });
+      }
+
+      /** una vez finalizado el testing en el runtime vamos a mandar el usuario actualizado y el objeto
+       * con los test
+       */
+      return res.status(200).json({
+        updateUser,
+        testUpdate,
+      });
+    } catch (error) {
+      if (req.file) deleteImgCloudinary(catchImg);
+      return res.status(404).json(error.message);
+    }
+  } catch (error) {
+    if (req.file) deleteImgCloudinary(catchImg);
+    return next(error);
+  }
+};
+
+//? ---------------------------------DELETE--------------------------------------
+
+const deleteUser = async (req, res, next) => {
+  try {
+    const { _id, image } = req.user;
+    await User.findByIdAndDelete(_id);
+
+    // hacemos un test para ver si lo ha borrado
+    if (await User.findById(_id)) {
+      // si el usuario
+      return res.status(404).json("not deleted"); ///
+    } else {
+      /**
+       * HAY QUE BORRARR TODO LO QUE HAY HECHO EL USER: LIKE, COMENTARIOS, LOS CHATS, LOS POSTS , REVIEWS ....
+       */
+      deleteImgCloudinary(image);
+
+      return res.status(200).json("ok delete");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+//? ---------------------------------findById------------------------------------
+
+const byId = async (req, res, next) => {
+  try {
+    const userById = await User.findById(req.params.id); // si no lo encuentra es un null
+    if (userById) {
+      return res.status(200).json(userById);
+    } else {
+      return res.status(404).json("usuario no encontrado");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+//? ---------------------------------getAll--------------------------------------
+
+const getAll = async (req, res, next) => {
+  try {
+    const getAllUser = await User.find(); // esto devuelve un array
+    if (getAll.length === 0) {
+      return res.status(404).json("no encontrados");
+    } else return res.status(200).json({ data: getAllUser });
+  } catch (error) {
+    return next(error);
+  }
+};
+//? ---------------------------------get By name---------------------------------
+
+const byName = async (req, res, next) => {
+  try {
+    const getNameUser = await User.findOne({ name: req.params.name });
+    if (getNameUser) {
+      return res.status(200).json(getNameUser);
+    } else {
+      return res.status(404).json("usuario no encontrado");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+//? ---------------------------------get By Gender---------------------------------
+
+const byGender = async (req, res, next) => {
+  try {
+    const getGenderUser = await User.find({
+      gender: req.params.gender,
+      name: req.params.name,
+    });
+    if (getGenderUser) {
+      return res.status(200).json(getGenderUser);
+    } else {
+      return res.status(404).json("usuario no encontrado");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
 module.exports = {
   registerLargo,
   registerUtil,
@@ -696,4 +864,10 @@ module.exports = {
   changePassword,
   sendPassword,
   modifyPassword,
+  update,
+  deleteUser,
+  getAll,
+  byId,
+  byName,
+  byGender,
 };

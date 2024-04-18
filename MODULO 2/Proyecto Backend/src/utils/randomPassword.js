@@ -1,3 +1,4 @@
+//?----------- Metodo para crear una contraseña random--------------
 const randomPassword = () => {
   const randomString = "*@!=&$";
   const passwordSecure = `${Math.random().toString(36).slice(-4)}${
