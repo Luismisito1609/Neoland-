@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt"); // para encryptar informacion
-const validator = require("validator"); /// n os sirve para validad info
+const validator = require("validator"); /// nos sirve para validad info
 const mongoose = require("mongoose");
 
 // el nombre del esquema en mayusculas

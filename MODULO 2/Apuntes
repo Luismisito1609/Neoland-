@@ -1,2 +1,3 @@
 // SyncIndexes son elementos unicos
 // Cuando en la ruta tenemos un upload tenemos una imagen? hay que neviar las cosas por el multiplatform
+//Params obligatorios , los query params no son obligatorios
