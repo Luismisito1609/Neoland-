@@ -19,11 +19,15 @@ const {
   byId,
   byName,
   byGender,
+  deleteMessageDeleteUser,
+  followUserToggle,
 } = require("../controllers/User.controllers");
 const { upload } = require("../../middleware/files.middleware");
 const { isAuth, isAuthAdmin } = require("../../middleware/auth.middleware");
 
+//!------------------------------------------------------------------------
 //?--------------------------------RUTAS SIN REDIRECT----------------------
+//!------------------------------------------------------------------------
 
 UserRoutes.post("/registerLargo", upload.single("image"), registerLargo);
 UserRoutes.post("/registerUtil", upload.single("image"), registerUtil);
@@ -39,11 +43,18 @@ UserRoutes.get("/", getAll);
 UserRoutes.get("/finById/:id", byId);
 UserRoutes.get("/finByName/:name", byName);
 UserRoutes.get("/finByGender/:gender/:name", byGender);
-
-//?-------------------------------- RUTAS CON REDIRECT----------------------
+UserRoutes.patch("/follow/:idUserSeQuiereSeguir", [isAuth], followUserToggle);
+//!------------------------------------------------------------------------
+//?--------------------------------RUTAS CON REDIRECT----------------------
+//!------------------------------------------------------------------------
 UserRoutes.post("/register", upload.single("image"), registerWithRedirect);
 
-//?----------------------- REDIRECT -------------------------------
+//!---------------- REDIRECT-------------------------------
 UserRoutes.post("/register/sendMail/:id", sendMailRedirect);
 UserRoutes.patch("/sendPassword/:id", sendPassword);
+UserRoutes.delete(
+  "/redirect/message/:arrayIdMessages",
+  deleteMessageDeleteUser
+);
+
 module.exports = UserRoutes;

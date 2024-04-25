@@ -13,7 +13,7 @@ const isAuth = async (req, res, next) => {
   try {
     const decoded = verifyToken(token, process.env.JWT_SECRET);
 
-    ///Creamos el rec.user cumpliendo con la condicion de que el  endpoint haya sido autenticado (usamos el isAuth en el middleware)
+    /// solo se crea req.user cuando es un endpoint authenticado ---> tiene como middleware el auth
     req.user = await User.findById(decoded.id);
     next();
   } catch (error) {
@@ -43,7 +43,30 @@ const isAuthAdmin = async (req, res, next) => {
   }
 };
 
+const isAuthSuper = async (req, res, next) => {
+  const token = req.headers.authorization?.replace("Bearer ", "");
+  if (!token) {
+    return next(new Error("Unauthorized"));
+  }
+
+  try {
+    const decoded = verifyToken(token, process.env.JWT_SECRET);
+    // cuando decodifico el token saco el id y el email
+    console.log(decoded);
+    req.user = await User.findById(decoded.id);
+
+    // pongo un requisito mas y es que sea admin
+    if (req.user.rol !== "superadmin") {
+      return next(new Error("Unauthorized, not superadmin"));
+    }
+    next();
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   isAuth,
   isAuthAdmin,
+  isAuthSuper,
 };
