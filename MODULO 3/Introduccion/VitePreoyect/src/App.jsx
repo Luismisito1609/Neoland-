@@ -5,6 +5,13 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const saludoSegunLaHora=(hora)=>{
+    if (hora>=6 && hora<12){
+      return 'Buenos dias';
+    } if (hora >=12 && hora<21){
+      return 'Buenas tardes';
+    } else {return 'Buenas noches';}
+  }
 
   return (
     <>
@@ -17,6 +24,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <p>{saludoSegunLaHora(count)}</p>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
